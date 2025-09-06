@@ -141,13 +141,8 @@ app.post('/api/users', async (req, res) => {
       return res.status(400).json({ error: 'Todos os campos são obrigatórios.'});
     }
 
-    const emailRegex = /^[^@]+@[^@]+\.[^@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Formato de email inválido.'});
-    }
-
     const existingUser = await db.get('SELECT 1 FROM users WHERE email = ?', [email]);
-    if (!existingUser) {
+    if (existingUser) {
       return res.status(400).json({ error: 'Email já cadastrado!'});
     }
 

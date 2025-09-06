@@ -189,6 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   btnSair.addEventListener("click", () => {
+    alert("Você tem certeza que deseja sair?");
     document.documentElement.dataset.userId = "";
     inputUserId.value = "";
     loginCard.classList.remove("hidden");

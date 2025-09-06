@@ -6,6 +6,8 @@ import { open } from 'sqlite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 async function createDb() {
   // Abre o banco existente meubanco.db (não apaga nada)
@@ -133,27 +135,38 @@ app.post('/api/messages', async (req, res) => {
 
 app.post('/api/users', async (req, res) => {
   try {
-    const { name, email, senha } = req.body;
-    if (!name || !email || !senha) {
-      return res.status(400).json({ error: 'Dados inválidos'});
+    const { name, email, senha} = req.body;
+
+    if (!name, !email, !senha) {
+      return res.status(400).json({ error: 'Todos os campos são obrigatórios.'});
     }
+
+    const emailRegex = /^[^@]+@[^@]+\.[^@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Formato de email inválido.'});
+    }
+
+    const existingUser = await db.get('SELECT 1 FROM users WHERE email = ?', [email]);
+    if (!existingUser) {
+      return res.status(400).json({ error: 'Email já cadastrado!'});
+    }
+
+    const hashSenha = await bcrypt.hash(senha, saltRounds);
 
     const result = await db.run(`
       INSERT INTO users (name, email, senha)
       VALUES
       (?, ?, ?)
-    `, [name, email, senha]);
+    `, [name, email, hashSenha]);
 
-    const saved = await db.run(`
-      SELECT name, email, senha
-      FROM users
-      WHERE id = ?
+    const saved = await db.get(`
+      SELECT id, name, email FROM users WHERE id = ?
     `, [result.lastID]);
 
-    res.status(201).json(saved);
+    res.status(201).json(saved)
   } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'Erro ao cadastrar usuário.'});
+    console.error('Erro ao cadastrar usuário:', e);
+    res.status(500).json({ error: 'Erro interno ao cadastrar usuário.'});
   }
 });
 

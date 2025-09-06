@@ -20,17 +20,19 @@
         <label for="inputUserId">Seu ID de usuário:</label>
         <input id="inputUserId" type="number" min="1" placeholder="Ex: 1" />
         <button id="btnLogin">Entrar</button>
+        <button id="btnShowRegister">Cadastrar</button>
       </div>
       <p id="loginInfo" class="muted">Informe seu ID e clique em Entrar.</p>
     </section>
 
-    <setion id="login-card" class="card">
-      <h2>Cadastre-se</h2>
+    <setion id="register-card" class="hidden">
+      <h2>Cadastro</h2>
       <div class="row">
-        <input type="text" placeholder="Digite o seu nome: " required>
-        <input type="email" placeholder="Digite o E-mail: " required>
-        <input type="password" placeholder="Digite a senha: " required>
-        <button id="btnCadastro">Cadastre-se</button>
+        <input id="inputName" type="text" placeholder="Digite o seu nome: " required>
+        <input id="inputEmail" type="email" placeholder="Digite o E-mail: " required>
+        <input id="inputSenha" type="password" placeholder="Digite a senha: " required>
+        <button id="btnRegister">Cadastre-se</button>
+        <button id="btnShowLogin">Voltar para Login</button>
       </div>
     </setion>
 

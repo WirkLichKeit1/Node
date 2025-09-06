@@ -133,8 +133,8 @@ app.post('/api/messages', async (req, res) => {
 
 app.post('/api/users', async (req, res) => {
   try {
-    const {name, email, senha} req.body;
-    if !name || !email || !senha {
+    const { name, email, senha } = req.body;
+    if (!name || !email || !senha) {
       return res.status(400).json({ error: 'Dados inválidos'});
     }
 

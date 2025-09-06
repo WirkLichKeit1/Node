@@ -40,7 +40,7 @@ async function getUserById(id) {
 
 function setLoggedUser(user) {
   me = user;
-  meName.textContent = `${me.name ?? '(sem nome)'} (#${me.id})`;
+  meName.textContent = `${me.name ?? '(sem nome)'} (Seu id: #${me.id})`;
   hide(loginCard);
   show(chatCard);
   peerInfo.textContent = 'Defina um ID de contato para carregar a conversa.';

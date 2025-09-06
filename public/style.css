@@ -108,3 +108,20 @@ button.link {
   grid-template-columns: 1fr auto;
   gap: 10px;
 }
+
+.error {
+  color: red;
+  font-weight: bold;
+}
+
+button.loading::after {
+  content: ' ⏳';
+}
+
+messages.loading::before {
+  content: 'Carregando...';
+  display: block;
+  text-align: center;
+  padding: 10px;
+  color: #888;
+}

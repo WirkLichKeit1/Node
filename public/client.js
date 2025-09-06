@@ -2,6 +2,7 @@ const $ = (sel) => document.querySelector(sel);
 
 const loginCard = $('#login-card');
 const chatCard = $('#chat-card');
+const registerCard = $('#register-card');
 const inputUserId = $('#inputUserId');
 const btnLogin = $('#btnLogin');
 const loginInfo = $('#loginInfo');
@@ -13,6 +14,13 @@ const peerInfo = $('#peerInfo');
 const messagesBox = $('#messages');
 const sendForm = $('#sendForm');
 const msgInput = $('#msgInput');
+const inputName = $('#inputName');
+const inputEmail = $('#inputEmail');
+const inputSenha = $('#inputSenha');
+const btnRegister = $('#btnRegister');
+const btnShowLogin = $('#btnShowLogin');
+const btnShowRegister = $('#btnShowRegister');
+const registerInfo = $('#registerInfo');
 
 let me = null;
 let peer = null;
@@ -23,10 +31,11 @@ let isSending = false;
 function show(el) { el.classList.remove('hidden'); }
 function hide(el) { el.classList.add('hidden'); }
 
-function showError(element, message) {
+function showError(element, message, type = 'error') {
   element.textContent = message;
-  element.classList.add('error');
-  setTimeout(() => element.classList.remove('error'), 3000);
+  element.classList.remove('error', 'success');
+  element.classList.add(type);
+  setTimeout(() => element.classList.remove(type), 3000);
 }
 
 function isValidId(id) {
@@ -56,10 +65,19 @@ async function getUserById(id) {
   return fetchJSON(`/api/users/${id}`);
 }
 
+async function registerUser(name, email, senha) {
+  return fetchJSON('/api/users', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, senha })
+  });
+}
+
 function setLoggedUser(user) {
   me = user;
   meName.textContent = `${me.name ?? '(sem nome)'} (Seu id: #${me.id})`;
   hide(loginCard);
+  hide(registerCard);
   show(chatCard);
   peerInfo.textContent = 'Defina um ID de contato para carregar a conversa.';
   inputPeerId.value = '';
@@ -83,6 +101,50 @@ btnLogin.addEventListener('click', async () => {
     showError(loginInfo, `Erro ao fazer login: ${e.message}`);
   } finally {
     btnLogin.classList.remove('loading');
+  }
+});
+
+btnShowRegister.addEventListener('click', () => {
+  hide(loginCard);
+  show(registerCard);
+  registerInfo.textContent = 'Preencha os campos para se cadastrar.';
+  inputName.focus();
+});
+
+btnShowLogin.addEventListener('click', () => {
+  hide(registerCard);
+  show(loginCard);
+  loginInfo.textContent = 'Informe seu ID e clique em Entrar.';
+  inputUserId.focus();
+});
+
+btnRegister.addEventListener('click', async () => {
+  const name = inputName.value.trim();
+  const email = inputEmail.value.trim();
+  const senha = inputSenha.value.trim();
+
+  if (!name || !email || !senha) {
+    showError(registerInfo, 'Por favor, preencha todos os campos.');
+    return;
+  }
+
+  btnRegister.classList.add('loading');
+  try {
+    const user = await registerUser(name, email, senha);
+    showError(registerInfo, `Cadastro realizado com sucesso! Seu ID é #${user.id}.`, 'success');
+    inputName.value = '';
+    inputEmail.value = '';
+    inputSenha.value = '';
+    setTimeout(() => {
+      hide(registerCard);
+      show(loginCard);
+      inputUserId.value = user.id;
+      inputUserId.focus();
+    }, 2000);
+  } catch (e) {
+    showError(registerInfo, `Erro ao cadastrar: ${e.message}`);
+  } finally {
+    btnRegister.classList.remove('loading');
   }
 });
 
@@ -234,5 +296,26 @@ msgInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
     sendForm.requestSubmit();
+  }
+});
+
+inputName.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    inputEmail.focus();
+  }
+});
+
+inputEmail.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    inputSenha.focus();
+  }
+});
+
+inputSenha.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    btnRegister.click();
   }
 });

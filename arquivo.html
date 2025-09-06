@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-user-id="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chat SQLite • Node + Express</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Chatzinho 💬</h1>
+      <p>Backend: Node.js + Express + SQLite3</p>
+    </header>
+
+    <!-- Login por ID -->
+    <section id="login-card" class="card">
+      <h2>Entrar</h2>
+      <div class="row">
+        <label for="inputUserId">Seu ID de usuário:</label>
+        <input id="inputUserId" type="number" min="1" placeholder="Ex: 1" />
+        <button id="btnLogin">Entrar</button>
+      </div>
+      <p id="loginInfo" class="muted">Informe seu ID e clique em Entrar.</p>
+    </section>
+
+    <!-- Área do chat -->
+    <section id="chat-card" class="card hidden">
+      <div class="row space-between">
+        <h2>Chat</h2>
+        <button id="btnSair" class="link">Sair</button>
+      </div>
+
+      <div class="row">
+        <div class="me">
+          <div class="label">Você:</div>
+          <div id="meName" class="pill">—</div>
+        </div>
+        <div class="peer">
+          <label for="inputPeerId">Conversar com ID:</label>
+          <input id="inputPeerId" type="number" min="1" placeholder="Ex: 2" />
+          <button id="btnCarregar">Carregar conversa</button>
+        </div>
+      </div>
+
+      <div id="peerInfo" class="muted">Defina um ID de contato para carregar a conversa.</div>
+
+      <div id="messages" class="messages"></div>
+
+      <form id="sendForm" class="send-row">
+        <input id="msgInput" type="text" placeholder="Digite sua mensagem..." autocomplete="off" />
+        <button id="btnSend" type="submit">Enviar</button>
+      </form>
+    </section>
+
+    <footer>
+      <small>Exemplo educativo. Ajuste as queries conforme o seu schema.</small>
+    </footer>
+  </div>
+
+  <script src="/client.js" defer></script>
+</body>
+</html>

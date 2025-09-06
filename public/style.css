@@ -109,6 +109,11 @@ button.link {
   gap: 10px;
 }
 
+.success {
+  color: green;
+  font-weight: bold;
+}
+
 .error {
   color: red;
   font-weight: bold;

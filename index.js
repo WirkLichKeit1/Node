@@ -131,6 +131,32 @@ app.post('/api/messages', async (req, res) => {
   }
 });
 
+app.post('/api/users', async (req, res) => {
+  try {
+    const {name, email, senha} req.body;
+    if !name || !email || !senha {
+      return res.status(400).json({ error: 'Dados inválidos'});
+    }
+
+    const result = await db.run(`
+      INSERT INTO users (name, email, senha)
+      VALUES
+      (?, ?, ?)
+    `, [name, email, senha]);
+
+    const saved = await db.run(`
+      SELECT name, email, senha
+      FROM users
+      WHERE id = ?
+    `, [result.lastID]);
+
+    res.status(201).json(saved);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Erro ao cadastrar usuário.'});
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);

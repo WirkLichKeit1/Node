@@ -128,6 +128,11 @@ btnRegister.addEventListener('click', async () => {
     return;
   }
 
+  const emailRegex = /^[^@]+@[^@]+\.[^@]+$/;
+  if (!emailRegex.test(email)) {
+    showError(registerInfo, 'Por favor, insira um email válido.');
+  }
+
   btnRegister.classList.add('loading');
   try {
     const user = await registerUser(name, email, senha);
